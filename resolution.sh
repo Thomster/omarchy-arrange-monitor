@@ -41,4 +41,19 @@ cm=$(jq -r '.colorManagementPreset // ""' <<<"$info")
 cm_arg=""
 [[ $cm =~ ^[A-Za-z0-9_-]+$ && $cm != "srgb" ]] && cm_arg=", cm = \"$cm\""
 
+# Record the mode in effect before the first runtime switch (tmpfs, gone after
+# a reboot), so arrange.sh can persist that one instead of the temporary mode.
+# Switching back to that size clears the record.
+state_dir="${XDG_RUNTIME_DIR:-/tmp}/omarchy/display-resolution"
+state_file="$state_dir/$monitor"
+if [[ ! -f $state_file ]]; then
+  mkdir -p "$state_dir"
+  jq -r '"\(.width)x\(.height)@\(.refreshRate) \(.scale)"' <<<"$info" |
+    awk '{ split($1, m, "@"); printf "%s@%.3f %s\n", m[1], m[2], $2 }' >"$state_file"
+fi
+
 hyprctl eval "hl.monitor({ output = \"$monitor\", mode = \"$mode\", position = \"$position\", scale = $scale$cm_arg })" >/dev/null
+
+read -r orig_mode _ <"$state_file" || true
+[[ ${orig_mode%@*} == "$size" ]] && rm -f "$state_file"
+exit 0

@@ -9,6 +9,12 @@ pairing, and the current arrangement is derived from live monitor geometry
 (not a remembered choice), so it stays honest if the layout changes some
 other way.
 
+Arranging only changes positions: both displays keep their current mode,
+scale and color-management preset. The rules written to `monitors.lua`
+persist the internal display's configured mode, not a temporary one picked
+under Display Resolution. `arrange.sh left|top|right --dry-run` prints what
+it would do without changing anything.
+
 ## Display resolution
 
 Below the brightness slider, a **Display Resolution** section switches the
