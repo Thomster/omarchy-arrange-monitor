@@ -54,6 +54,44 @@ Panel {
   property int selectedIndex: 0
   property bool cursorActive: false
 
+  // ---- Display resolution (focused monitor, runtime only) ----
+  // Offered sizes and the scale each one gets. Override per bar entry with a
+  // "resolutions" setting in shell.json. Only sizes the focused monitor
+  // actually offers are shown, and the section hides with fewer than two.
+  // Defaults: the iMac19,1 panel's 4K mode at 1.5 (a 2560x1440 workspace),
+  // and 1440p/1080p at 1.
+  readonly property var resolutionPresets: setting("resolutions", [
+    { size: "3840x2160", scale: 1.5 },
+    { size: "2560x1440", scale: 1 },
+    { size: "1920x1080", scale: 1 }
+  ])
+  readonly property var focusedDisplayInfo: {
+    for (var i = 0; i < displays.length; i++) {
+      if (displays[i] && displays[i].focused) return displays[i]
+    }
+    return null
+  }
+  readonly property var resolutionOptions: {
+    var d = focusedDisplayInfo
+    var modes = d && d.availableModes ? d.availableModes : []
+    var out = []
+    for (var i = 0; i < resolutionPresets.length; i++) {
+      var p = resolutionPresets[i]
+      for (var j = 0; j < modes.length; j++) {
+        if (String(modes[j]).indexOf(p.size + "@") === 0) { out.push(p); break }
+      }
+    }
+    return out
+  }
+  readonly property string currentResolution: focusedDisplayInfo
+    ? focusedDisplayInfo.width + "x" + focusedDisplayInfo.height : ""
+
+  function setResolution(size, scale) {
+    if (!focusedMonitor || actionProc.running) return
+    actionProc.command = [scriptPath("resolution.sh"), focusedMonitor, size, String(scale)]
+    actionProc.running = true
+  }
+
   // ---- Arrangement (internal + external, left/top/right of each other) ----
   readonly property var arrangementOptions: [
     { label: "Left", value: "left" },
@@ -711,6 +749,54 @@ Panel {
                   root.cursorActive = true
                   root.focusSection = "brightness"
                   root.selectedIndex = -1
+                }
+              }
+            }
+          }
+
+          // ---------- Display resolution ----------
+          // Mouse-only, like the session actions in the power panel: not part
+          // of the j/k cursor model.
+          PanelSeparator {
+            visible: root.resolutionOptions.length > 1
+            foreground: root.bar.foreground
+          }
+
+          Column {
+            visible: root.resolutionOptions.length > 1
+            width: parent.width
+            spacing: Style.space(10)
+
+            PanelSectionHeader {
+              text: "DISPLAY RESOLUTION"
+              foreground: root.bar.foreground
+              fontFamily: root.bar.fontFamily
+            }
+
+            Grid {
+              id: resolutionRow
+              width: parent.width
+              columns: Math.max(1, root.resolutionOptions.length)
+              spacing: Style.spacing.xs
+
+              readonly property real cellWidth: (width - spacing * (columns - 1)) / columns
+
+              Repeater {
+                model: root.resolutionOptions
+
+                Button {
+                  required property var modelData
+                  width: resolutionRow.cellWidth
+                  text: String(modelData.size).replace("x", "×")
+                  fontSize: Style.font.caption
+                  foreground: root.bar.foreground
+                  fontFamily: root.bar.fontFamily
+                  horizontalPadding: Style.spacing.sm
+                  verticalPadding: Style.spacing.controlPaddingY
+                  bordered: true
+                  active: root.currentResolution === modelData.size
+                  tooltipText: "Until reboot or config reload, scale " + modelData.scale + "x"
+                  onClicked: root.setResolution(modelData.size, modelData.scale)
                 }
               }
             }

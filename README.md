@@ -9,6 +9,25 @@ pairing, and the current arrangement is derived from live monitor geometry
 (not a remembered choice), so it stays honest if the layout changes some
 other way.
 
+## Display resolution
+
+Below the brightness slider, a **Display Resolution** section switches the
+focused monitor between a few sizes with one click. Defaults are
+3840×2160 (scale 1.5), 2560×1440 and 1920×1080 (scale 1). Only sizes the
+monitor offers are shown, and the section hides with fewer than two. The
+switch keeps the monitor's position and color-management preset (e.g. `dp3`)
+and picks the highest refresh rate for that size.
+
+It is **runtime only**: nothing is written to `monitors.lua`, so a Hyprland
+config reload or a reboot restores the configured mode.
+
+Change the offered sizes per bar entry in `shell.json`:
+
+```json
+{ "id": "omarchy_plus_display-arrange",
+  "resolutions": [ { "size": "2560x1600", "scale": 1.25 }, { "size": "1920x1200", "scale": 1 } ] }
+```
+
 ## Install
 
 ```

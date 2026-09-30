@@ -21,4 +21,4 @@ printf '%s\n' "$focused_monitor"
 omarchy-hyprland-monitor-scaling 2>/dev/null || echo
 
 printf '%s\n' "$monitors_json" | jq -c \
-  '[.[] | {name, enabled:(.disabled != true), focused:(.focused == true), width, height, x, y, scale}]'
+  '[.[] | {name, enabled:(.disabled != true), focused:(.focused == true), width, height, x, y, scale, availableModes}]'
