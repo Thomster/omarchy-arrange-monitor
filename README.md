@@ -1,4 +1,4 @@
-# omarchy-display-arrange
+# omarchy-arrange-monitor
 
 An [Omarchy](https://omarchy.org/) shell bar widget: brightness slider plus
 one-click Left/Top/Right arrangement for a second monitor. A clone of the
@@ -30,19 +30,41 @@ config reload or a reboot restores the configured mode.
 Change the offered sizes per bar entry in `shell.json`:
 
 ```json
-{ "id": "omarchy_plus_display-arrange",
+{ "id": "omarchy_plus_arrange.monitor",
   "resolutions": [ { "size": "2560x1600", "scale": 1.25 }, { "size": "1920x1200", "scale": 1 } ] }
 ```
 
 ## Install
 
 ```
-omarchy plugin add https://github.com/Thomster/omarchy-display-arrange.git
+omarchy plugin add https://github.com/Thomster/omarchy-arrange-monitor.git
 ```
+
+## Migrating from omarchy-display-arrange
+
+Up to 1.1.1 this plugin was called `omarchy-display-arrange` with the id
+`omarchy_plus_display-arrange`. An installed copy keeps that id, so replace it:
+
+```
+omarchy plugin disable omarchy_plus_display-arrange
+omarchy plugin remove omarchy_plus_display-arrange
+omarchy plugin add https://github.com/Thomster/omarchy-arrange-monitor.git --enable
+```
+
+A `resolutions` setting on the old bar entry in `shell.json` has to be moved to the
+new entry by hand.
 
 ## Requirements
 
 - Hyprland (uses `hyprctl` for monitor geometry/positioning)
+
+## Related
+
+Part of a set of drop-in replacements for Omarchy's stock bar widgets, all named "*Stock name* (*Feature*)": [omarchy-recents-menu](https://github.com/Thomster/omarchy-recents-menu), [omarchy-session-actions-power](https://github.com/Thomster/omarchy-session-actions-power), [omarchy-radio-status-network](https://github.com/Thomster/omarchy-radio-status-network).
+
+## Changelog
+
+Current version: **2.0.0**. See [CHANGELOG.md](CHANGELOG.md).
 
 ## How this came to be
 

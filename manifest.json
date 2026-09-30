@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "omarchy_plus_display-arrange",
-  "name": "Display Arrange",
-  "version": "1.0.0",
-  "author": "Thomas",
-  "description": "Brightness slider plus one-click Left/Top/Right arrangement for a second monitor",
+  "id": "omarchy_plus_arrange.monitor",
+  "name": "Display (Arrange)",
+  "version": "2.0.0",
+  "author": "Claude Code / Thomas Alt",
+  "description": "Replaces the Omarchy display widget with a clone that adds Left/Top/Right arrangement for a second monitor and one-click display resolution switching.",
   "kinds": [
     "bar-widget"
   ],
@@ -12,8 +12,8 @@
     "barWidget": "Panel.qml"
   },
   "barWidget": {
-    "displayName": "Display Arrange",
-    "description": "Brightness slider plus one-click Left/Top/Right arrangement for a second monitor",
+    "displayName": "Display (Arrange)",
+    "description": "Replaces the Omarchy display widget with a clone that adds Left/Top/Right arrangement for a second monitor and one-click display resolution switching.",
     "category": "System",
     "allowMultiple": false
   },
