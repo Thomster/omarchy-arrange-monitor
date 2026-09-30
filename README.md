@@ -47,7 +47,7 @@ Up to 1.1.1 this plugin was called `omarchy-display-arrange` with the id
 
 ```
 omarchy plugin disable omarchy_plus_display-arrange
-omarchy plugin remove omarchy_plus_display-arrange
+omarchy plugin remove --yes omarchy_plus_display-arrange
 omarchy plugin add https://github.com/Thomster/omarchy-arrange-monitor.git --enable
 ```
 
